@@ -86,5 +86,11 @@ public class ComponyControllerTest {
                 .andExpect(jsonPath("$.id").value(expect.id()))
                 .andExpect(jsonPath("$.name").value("compony22"));
     }
-
+    @Test
+    void should_return_204_when_delete_employee_by_id() throws Exception {
+        Compony expect = componyController.create(new Compony(null, "compony1"));
+        MockHttpServletRequestBuilder request = delete("/componies/" + expect.id()).contentType(MediaType.APPLICATION_JSON);
+        mockMvc.perform(request)
+                .andExpect(status().isNoContent());
+    }
 }

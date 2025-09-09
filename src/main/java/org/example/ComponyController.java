@@ -47,14 +47,20 @@ public class ComponyController {
         return list;
     }
     @PutMapping("{id}")
-    public Compony update(@PathVariable int id, @RequestBody Compony employee) {
+    public Compony update(@PathVariable int id, @RequestBody Compony compony) {
         for (int i = 0; i < componies.size(); i++) {
             if (componies.get(i).id().equals(id)) {
-                Compony updatedEmployee = new Compony(id, employee.name());
+                Compony updatedEmployee = new Compony(id, compony.name());
                 componies.set(i, updatedEmployee);
                 return updatedEmployee;
             }
         }
-        return employee;
+        return compony;
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
+        componies.removeIf(compony -> compony.id().equals(id));
     }
 }
