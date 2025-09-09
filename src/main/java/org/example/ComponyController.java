@@ -11,6 +11,10 @@ import java.util.List;
 public class ComponyController {
     private List<Compony> componies = new ArrayList<>();
     private int id = 0;
+    public void clear() {
+        componies.clear();
+        id = 0;
+    }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Compony create(@RequestBody Compony compony) {
@@ -28,5 +32,18 @@ public class ComponyController {
         }
         return null;
     }
-
+    @GetMapping
+    public List<Compony> listCompony(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size){
+        List<Compony> list = componies;
+        if(page != null && size != null){
+            int fromIndex = (page - 1) * size;
+            int toIndex = Math.min(fromIndex + size, list.size());
+            if(fromIndex <= list.size()){
+                list = list.subList(fromIndex, toIndex);
+            }else{
+                list = new ArrayList<>();
+            }
+        }
+        return list;
+    }
 }

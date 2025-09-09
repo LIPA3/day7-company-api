@@ -1,5 +1,6 @@
 package org.example;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,6 +21,10 @@ public class ComponyControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ComponyController componyController;
+    @BeforeEach
+    public void setup() {
+        componyController.clear();
+    }
     @Test
     void should_return_created_compony_when_post_() throws Exception {
         //given
@@ -45,5 +50,15 @@ public class ComponyControllerTest {
                 .andExpect(jsonPath("$.id").value(expect.id()))
                 .andExpect(jsonPath("$.name").value(expect.name()));
     }
-
+    @Test
+    void  should_return_componies_when_get_list() throws Exception {
+        setup();
+        componyController.create(new Compony(null, "John Smith"));
+        componyController.create(new Compony(null, "Lily"));
+        componyController.create(new Compony(null, "Sam"));
+        MockHttpServletRequestBuilder request = get("/componies").contentType(MediaType.APPLICATION_JSON);
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3));
+    }
 }
