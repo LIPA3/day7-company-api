@@ -25,12 +25,7 @@ public class ComponyController {
     }
     @GetMapping("{id}")
     public  Compony get(@PathVariable int id){
-        for(Compony compony : componies){
-            if(compony.id().equals(id)){
-                return compony;
-            }
-        }
-        return null;
+        return componies.stream().filter(compony -> compony.id().equals(id)).findFirst().orElse(null);
     }
     @GetMapping
     public List<Compony> listCompony(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size){
@@ -48,14 +43,11 @@ public class ComponyController {
     }
     @PutMapping("{id}")
     public Compony update(@PathVariable int id, @RequestBody Compony compony) {
-        for (int i = 0; i < componies.size(); i++) {
-            if (componies.get(i).id().equals(id)) {
-                Compony updatedEmployee = new Compony(id, compony.name());
-                componies.set(i, updatedEmployee);
-                return updatedEmployee;
-            }
-        }
-        return compony;
+        return componies.stream().filter(c -> c.id().equals(id)).findFirst().map(c -> {
+            Compony updatedCompony = new Compony(id, compony.name());
+            componies.set(componies.indexOf(c), updatedCompony);
+            return updatedCompony;
+        }).orElse(null);
     }
 
     @DeleteMapping("{id}")
