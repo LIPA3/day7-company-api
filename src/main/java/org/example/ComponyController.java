@@ -19,4 +19,14 @@ public class ComponyController {
         componies.add(newCompony);
         return newCompony;
     }
+    @GetMapping("{id}")
+    public  Compony get(@PathVariable int id){
+        for(Compony compony : componies){
+            if(compony.id().equals(id)){
+                return compony;
+            }
+        }
+        return null;
+    }
+
 }

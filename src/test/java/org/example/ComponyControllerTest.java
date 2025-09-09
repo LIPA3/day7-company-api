@@ -35,5 +35,15 @@ public class ComponyControllerTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value("compony1"));
     }
+    @Test
+    void should_return_compony_when_get_compony_by_id() throws Exception {
+        Compony compony = new Compony(null, "compony1");
+        Compony expect = componyController.create(compony);
+        MockHttpServletRequestBuilder request = get("/componies/" + expect.id()).contentType(MediaType.APPLICATION_JSON);
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(expect.id()))
+                .andExpect(jsonPath("$.name").value(expect.name()));
+    }
 
 }
