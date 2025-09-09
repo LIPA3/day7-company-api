@@ -46,4 +46,15 @@ public class ComponyController {
         }
         return list;
     }
+    @PutMapping("{id}")
+    public Compony update(@PathVariable int id, @RequestBody Compony employee) {
+        for (int i = 0; i < componies.size(); i++) {
+            if (componies.get(i).id().equals(id)) {
+                Compony updatedEmployee = new Compony(id, employee.name());
+                componies.set(i, updatedEmployee);
+                return updatedEmployee;
+            }
+        }
+        return employee;
+    }
 }

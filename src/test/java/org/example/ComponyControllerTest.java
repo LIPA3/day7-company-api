@@ -9,8 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,9 +52,9 @@ public class ComponyControllerTest {
     @Test
     void  should_return_componies_when_get_list() throws Exception {
         setup();
-        componyController.create(new Compony(null, "John Smith"));
-        componyController.create(new Compony(null, "Lily"));
-        componyController.create(new Compony(null, "Sam"));
+        componyController.create(new Compony(null, "compony1"));
+        componyController.create(new Compony(null, "compony2"));
+        componyController.create(new Compony(null, "compony3"));
         MockHttpServletRequestBuilder request = get("/componies").contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -65,11 +64,27 @@ public class ComponyControllerTest {
     void should_return_page_1_size_5_when_get_componies_page_1_size_5() throws Exception {
         setup();
         for (int i = 1; i <= 12; i++) {
-            componyController.create(new Compony(null, "Employee" + i));
+            componyController.create(new Compony(null, "Compony" + i));
         }
         MockHttpServletRequestBuilder request = get("/componies?page=1&size=5").contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(5));
     }
+
+    @Test
+    void should_return_updated_employee_age_and_salary_when_put_employee() throws Exception {
+        Compony expect = componyController.create(new Compony(null, "compony1"));
+        String requestBody = """
+                {
+                "name": "compony22"
+                }
+                """;
+        MockHttpServletRequestBuilder request = put("/componies/" + expect.id()).contentType(MediaType.APPLICATION_JSON).content(requestBody);
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(expect.id()))
+                .andExpect(jsonPath("$.name").value("compony22"));
+    }
+
 }
