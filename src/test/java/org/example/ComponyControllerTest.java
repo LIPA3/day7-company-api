@@ -61,4 +61,15 @@ public class ComponyControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(3));
     }
+    @Test
+    void should_return_page_1_size_5_when_get_componies_page_1_size_5() throws Exception {
+        setup();
+        for (int i = 1; i <= 12; i++) {
+            componyController.create(new Compony(null, "Employee" + i));
+        }
+        MockHttpServletRequestBuilder request = get("/componies?page=1&size=5").contentType(MediaType.APPLICATION_JSON);
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5));
+    }
 }
